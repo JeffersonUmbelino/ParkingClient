@@ -138,6 +138,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-simple-native-geofencing')
     implementation project(':react-native-gesture-handler')
     implementation project(':react-native-maps')
     implementation fileTree(dir: "libs", include: ["*.jar"])
