@@ -1,8 +1,9 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import MapView, { Marker, Callout } from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import Search from '../components/search';
+
 
 import api from '../../services/api';
 
@@ -38,6 +39,8 @@ export default class Main extends Component {
   watchID: ?number = null
 //inicio componente Didmount
   componentDidMount() {
+
+    //INICIO-LOCALIZAÇÃO USUARIO
     // eslint-disable-next-line no-undef
     navigator.geolocation.getCurrentPosition(
 
@@ -90,7 +93,8 @@ export default class Main extends Component {
         });
         {this.getParkings()}
       },
-    ); 
+    );
+    //FIM-LOCALIZAÇÃO USUARIO
   } 
  //fim componente Didmount
 
@@ -117,11 +121,11 @@ export default class Main extends Component {
 
  
         this.setState({ locations: response.data });
+        { this.startMonitoring() }
       } catch (err) {
         console.log('erro');   
       }
   }
-
 
   updateState(location) { 
     this.setState({
@@ -148,10 +152,6 @@ export default class Main extends Component {
     this.setState({ region });
   }
 
- /* handleLocationSelected = (data, { geometry }) => {
-     const { location: { lat: latitude, lon: longitude }} = geometry
-  }*/
-  
   renderLocations = () => (
     this.state.locations.map(location => (
       <Marker
@@ -181,7 +181,7 @@ export default class Main extends Component {
           loadingEnabled
           showsMyLocationButton={false}
           zoomControlEnabled
-          onRegionChange={reg => this.onMapRegionChange(reg)}
+          onRegionChangeComplete={reg => this.onMapRegionChange(reg)}
   
         > 
 
