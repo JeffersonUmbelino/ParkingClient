@@ -8,7 +8,8 @@ import { AsyncStorage } from 'react-native';
 */
 
 const api = axios.create({
-  baseURL: ' http://10.0.3.2:3333/',
+  //baseURL: ' http://10.0.3.2:3333/',
+  baseURL: 'https://ufma-parkings.herokuapp.com/',
 });
 
 //axios interceptors
