@@ -5,8 +5,8 @@ import SignUp from './pages/signUp';
 import Main from './pages/main';
 
 const Routes = createStackNavigator({
-  SignIn,
-  SignUp,
+  //SignIn,
+  //SignUp,
   Main,
 });
 

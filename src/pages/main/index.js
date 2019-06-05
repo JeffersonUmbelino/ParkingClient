@@ -1,7 +1,9 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, Polygon } from 'react-native-maps';
+import Search from '../components/search';
+
 
 import Search from '../components/search';
 import api from '../../services/api';
@@ -121,12 +123,22 @@ export default class Main extends Component {
         params: {
           latitude: region.latitude,
           longitude: region.longitude,
+          distance: 100000,
+
         },
   
         });
 
- 
-        this.setState({ locations: response.data });
+        //let coords = response.data.polygon.map(pos => { return { latitude: pos[1], longitude: pos[0] } })
+        const data = response.data.map ( (o) => { 
+            const coords = JSON.parse (o.polygon)
+            const gcoords = coords.map(pos => { return { latitude: pos[1], longitude: pos[0] } })
+            return {...o, coords :  gcoords } }
+        )
+        console.log (data)
+        this.setState({ locations: data});
+
+        //console.log(response.data)
         { this.startMonitoring() }
       } catch (err) {
         console.log('erro');   
@@ -156,6 +168,8 @@ export default class Main extends Component {
 
   onMapRegionChange(region) {
     this.setState({ region });
+    //this.getParkings()
+    //console.log(this.state.region)
   }
 
   //Inicio-Geofecing
@@ -165,22 +179,29 @@ export default class Main extends Component {
 
   renderLocations = () => (
     this.state.locations.map(location => (
-     <Marker
-        id={location.id.toString()}
+      <Marker
+        key={location.id.toString()}
         coordinate={{ longitude: location.longitude, latitude: location.latitude }}
       >
           <AnnotationContainer>
             <AnnotationText>{location.id}</AnnotationText>
           </AnnotationContainer>
-
       </Marker>
+    ))
+  )
 
-      )
-    )
+  renderAreas = () => (
+    this.state.locations.map(location => (
+      <Polygon
+        key={location.id.toString()}
+        coordinates= {location.coords}
+      />
+    ))
   )
 
   render() {
-    const { region } = this.render;
+    const { region } = this.state;
+    //console.log(region)
     console.disableYellowBox = true;
     console.log(this.state.coords);
   
@@ -198,6 +219,7 @@ export default class Main extends Component {
         > 
 
         {this.renderLocations()}
+        {this.renderAreas()}
         </MapView>
         <Search notifyChange={loc => this.getCoordsSearchName(loc)} />
         
