@@ -1,8 +1,10 @@
 import ParkingGeofecing from 'react-native-simple-native-geofencing';
 
+
 export default class geofecing extends Component {
 
     componentDidMount(){
+        //set up Notifications
         ParkingGeofecing.initNotification(
             {
               channel: {
@@ -22,6 +24,7 @@ export default class geofecing extends Component {
               enter: {
                 notify: true,
                 title: "Attention",
+                //[value] will be replaced ob geofences' value attribute
                 description: "You entered a [value] Zone"
               },
               exit: {
@@ -33,11 +36,25 @@ export default class geofecing extends Component {
          );
     }
 
-
-
-  render() {
-    return (
+    fail(){
+        console.log("Fail to start geofencing")
+    }
+    startMonitoring(lat, long){
+        const geofences = [
+          {
+            key: "geoNum1",
+            latitude: lat,
+            longitude: long,
+            radius: 200,
+            value: "yellow"
+          },
+      
+        ];
+        ParkingGeofecing.addGeofences(geofences, 3000000, this.fail);
+    }
     
-    );
-  }
+    stopMonitoring(){
+      ParkingGeofecing.removeAllGeofences();
+    }
 }
+

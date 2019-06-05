@@ -2,10 +2,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import MapView, { Marker } from 'react-native-maps';
+
 import Search from '../components/search';
-
-
 import api from '../../services/api';
+
 
 import { 
   Container,
@@ -14,6 +14,7 @@ import {
   } from './styles';
 
 export default class Main extends Component {
+ 
 
   static navigationOptions = {
     header: null,
@@ -95,6 +96,11 @@ export default class Main extends Component {
       },
     );
     //FIM-LOCALIZAÇÃO USUARIO
+
+    //Inicio-Geo
+   
+    //fim-Geo
+
   } 
  //fim componente Didmount
 
@@ -152,9 +158,14 @@ export default class Main extends Component {
     this.setState({ region });
   }
 
+  //Inicio-Geofecing
+
+ 
+  //Fim-Geofecing
+
   renderLocations = () => (
     this.state.locations.map(location => (
-      <Marker
+     <Marker
         id={location.id.toString()}
         coordinate={{ longitude: location.longitude, latitude: location.latitude }}
       >
@@ -164,13 +175,14 @@ export default class Main extends Component {
 
       </Marker>
 
-    ))
+      )
+    )
   )
 
   render() {
-    const { region } = this.state;
-    console.log(region)
+    const { region } = this.render;
     console.disableYellowBox = true;
+    console.log(this.state.coords);
   
     return (
       <Container>
