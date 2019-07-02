@@ -181,7 +181,7 @@ export default class Main extends Component {
         latitude: loc.latitude,
         longitude: loc.longitude,
       })
-        .then(ToastAndroid.show('Geofence Criada: ', ToastAndroid.LONG, '3500'))
+        .then(ToastAndroid.show('Geofence Criada: ', ToastAndroid.LONG))
         .catch(error => console.log(JSON.stringify(error)))
         
       )
