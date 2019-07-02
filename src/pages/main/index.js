@@ -2,7 +2,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import MapView, { Marker, Polygon } from 'react-native-maps';
-import Search from '../components/search';
+import Geofence, { Constants } from 'react-native-geolocation-monitor';
+import {ToastAndroid} from 'react-native';
 
 
 import Search from '../components/search';
@@ -100,7 +101,7 @@ export default class Main extends Component {
     //FIM-LOCALIZAÇÃO USUARIO
 
     //Inicio-Geo
-   
+
     //fim-Geo
 
   } 
@@ -112,22 +113,23 @@ export default class Main extends Component {
   }
 
   async getParkings() {
+    
     try {
       const { region } = this.state;
-      console.log('getparkingLat:', region.latitude);
-      console.log('getparkingLon:', region.longitude);
-      
       const response = await api.get('/parkings', {
         
         // -2.559344 ; -44.311542
         params: {
           latitude: region.latitude,
           longitude: region.longitude,
-          distance: 100000,
+          distance: 1000,
 
         },
-  
-        });
+            
+          } 
+
+
+        );
 
         //let coords = response.data.polygon.map(pos => { return { latitude: pos[1], longitude: pos[0] } })
         const data = response.data.map ( (o) => { 
@@ -135,13 +137,12 @@ export default class Main extends Component {
             const gcoords = coords.map(pos => { return { latitude: pos[1], longitude: pos[0] } })
             return {...o, coords :  gcoords } }
         )
-        console.log (data)
-        this.setState({ locations: data});
 
-        //console.log(response.data)
-        { this.startMonitoring() }
+        this.setState({ locations: data });
+        this.createGeofence(data); 
+
       } catch (err) {
-        console.log('erro');   
+        console.log('erroGetParking');   
       }
   }
 
@@ -168,13 +169,29 @@ export default class Main extends Component {
 
   onMapRegionChange(region) {
     this.setState({ region });
-    //this.getParkings()
-    //console.log(this.state.region)
   }
 
-  //Inicio-Geofecing
 
- 
+  //Inicio-Geofecing
+  createGeofence() {
+    this.state.locations.map((loc) => (
+      Geofence.add({
+        id: loc.title,
+        radius: 100,
+        latitude: loc.latitude,
+        longitude: loc.longitude,
+      })
+        .then(ToastAndroid.show('Geofence Criada: ', ToastAndroid.LONG, '3500'))
+        .catch(error => console.log(JSON.stringify(error)))
+        
+      )
+    )
+
+    this.subscription = Geofence.notify(result => {
+      console.log(result);
+    });
+    }
+   
   //Fim-Geofecing
 
   renderLocations = () => (
@@ -183,10 +200,12 @@ export default class Main extends Component {
         key={location.id.toString()}
         coordinate={{ longitude: location.longitude, latitude: location.latitude }}
       >
+        
           <AnnotationContainer>
             <AnnotationText>{location.id}</AnnotationText>
           </AnnotationContainer>
       </Marker>
+
     ))
   )
 
@@ -195,16 +214,15 @@ export default class Main extends Component {
       <Polygon
         key={location.id.toString()}
         coordinates= {location.coords}
+        fillColor={'#4682B4'}
       />
+
     ))
   )
 
   render() {
     const { region } = this.state;
-    //console.log(region)
     console.disableYellowBox = true;
-    console.log(this.state.coords);
-  
     return (
       <Container>
         <MapView 
@@ -221,8 +239,7 @@ export default class Main extends Component {
         {this.renderLocations()}
         {this.renderAreas()}
         </MapView>
-        <Search notifyChange={loc => this.getCoordsSearchName(loc)} />
-        
+        <Search notifyChange={loc => this.getCoordsSearchName(loc)} />      
     </Container>
 
       );

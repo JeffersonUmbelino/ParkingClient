@@ -3,6 +3,7 @@ package com.parkingclient;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.acurat.geofence.RNGeofencePackage;
 import com.simplegeofencing.reactnative.RNSimpleNativeGeofencing;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.airbnb.android.react.maps.MapsPackage;
@@ -26,6 +27,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNGeofencePackage(),
             new RNSimpleNativeGeofencing(),
             new RNGestureHandlerPackage(),
             new MapsPackage()
