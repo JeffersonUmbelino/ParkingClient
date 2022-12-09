@@ -13,7 +13,7 @@
     "react-native": "0.59.5",
     "react-native-geolocation-monitor": "0.0.6",
     "react-native-gesture-handler": "^1.3.0",
-    "react-native-google-places-autocomplete": "^1.3.9",
+    "react-native-google-places-autocomplete": "^1.9.0",
     "react-native-maps": "^0.24.2",
     "react-native-simple-native-geofencing": "^0.8.4",
     "react-navigation": "^3.9.1",
